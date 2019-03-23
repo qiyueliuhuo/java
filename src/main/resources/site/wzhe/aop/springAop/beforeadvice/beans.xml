@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- 可以通过spring配置方式以"很spring的方式"声明一个代理 -->
+    <bean id="greetingBeforeAdvice" class="site.wzhe.aop.springAop.beforeadvice.GreetingBeforeAdvice"/> <!-- 增强bean对象 -->
+    <bean id="geetingAfterAdvice" class="site.wzhe.aop.springAop.afteradvice.GeetingAfterAdvice"/> <!-- 增强bean对象 -->
+
+    <bean id="target" class="site.wzhe.aop.springAop.NaiveWaiter"/> <!-- 目标对象-->
+    <!-- proxyInterfaces指定代理的接口 -->
+    <!-- interceptorNames指定使用的增强 -->
+    <!-- interceptorNames中再加上后置增强 -->
+    <bean id="waiter" class="org.springframework.aop.framework.ProxyFactoryBean"
+          p:proxyInterfaces="site.wzhe.aop.springAop.Waiter"
+          p:interceptorNames="greetingBeforeAdvice,geetingAfterAdvice"
+          p:target-ref="target"
+    />
+    <!--
+     NOTE:
+        ProxyFactoryBean是FactoryBean接口的实现类，负责实例化一个Bean，(FactoryBean：
+        传统没有用到FactoryBean的创建bean方式是再配置文件中通过属性配置，这种配置灵活性受限，所以有了
+        通过一个类实现FactoryBean接口，用户可以通过该工厂接口定制实例化Bean的逻辑，接口中定义了
+        getObject(),猜测用它来获得bean放入ApplicationContext)
+        ProxyFactoryBean负责为其他Bean创建代理实例，它在内部使用ProxyFactory来完成这项工作.
+        此时使用的是JDK动态代理方式实现。
+        如果加上p:proxyTarget="true"后，无需再设置proxyInterfaces属性(有，也会被忽略)，
+        这是采用对类进行代理(而不是对接口进行代理)。
+    -->
+</beans>

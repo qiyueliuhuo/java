@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- 定义代理目标bean -->
+    <bean id="waiterTarget" class="site.wzhe.aop.springAop.pointcut.Waiter"/>
+    <bean id="sellerTarget" class="site.wzhe.aop.springAop.pointcut.Seller"/>
+
+    <!-- 定义一个前置增强 -->
+    <bean id="greetingAdvice" class="site.wzhe.aop.springAop.pointcut.staticpointcut.GreetingBeforeAdvice"/>
+
+    <!-- 定义一个切面，并向切面中注入增强 -->
+    <bean id="greetingAdvisor" class="site.wzhe.aop.springAop.pointcut.staticpointcut.GreetingAdvisor"
+          p:advice-ref="greetingAdvice"/>
+
+    <!-- 通过一个父<bean> 定义公共的配置信息  spring容器不会为该类创建对象-->
+    <bean id="parent" abstract="true"
+          class="org.springframework.aop.framework.ProxyFactoryBean"
+          p:interceptorNames="greetingAdvisor"
+          p:proxyTargetClass="true"/>
+    <bean id="waiter" parent="parent"  p:target-ref="waiterTarget"/> <!-- waiter代理-->
+    <bean id="seller" parent="parent"  p:target-ref="sellerTarget"/> <!-- seller代理-->
+
+
+    <!-- RegexpMethodPointcutAdvisor开始 -->
+    <!-- 通过StaticMethodMatcherPointcutAdvisor定义切面，仅通过方法名定义切点，这种描述方式不够
+    灵活，如果有多个目标类中有多个方法，它们满足一定的命名规范，使用正则表达式进行匹配描述就要灵活的多了
+     RegexpMethodPointcutAdvisor就是，一般无须扩展该类-->
+    <bean id="waiterTarget1" class="site.wzhe.aop.springAop.pointcut.Waiter"/>
+    <bean id="regexpAdvisor"
+          class="org.springframework.aop.support.RegexpMethodPointcutAdvisor"
+          p:advice-ref="greetingAdvice">  <!-- 用了前面定义的前置增强 -->
+        <property name="patterns"> <!--用正则表达式定义目标类全限定方法名的匹配模式串 -->
+            <list>
+                <value>.*greet.*</value>
+            </list>
+        </property>
+    </bean>
+    <bean id="waiter1" class="org.springframework.aop.framework.ProxyFactoryBean"
+          p:interceptorNames="regexpAdvisor"
+          p:target-ref="waiterTarget1"
+          p:proxyTargetClass="true"/>
+    <!-- RegexpMethodPointcutAdvisor结束 -->
+</beans>

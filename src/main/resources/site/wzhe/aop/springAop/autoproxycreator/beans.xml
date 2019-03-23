@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!--<bean id="waiter" class="site.wzhe.aop.springAop.autoproxycreator.Waiter"/>-->
+    <!--<bean id="seller" class="site.wzhe.aop.springAop.autoproxycreator.Seller"/>-->
+    <!--<bean id="greetingAdvice" class="site.wzhe.aop.springAop.autoproxycreator.GreetingBeforeAdvice" />-->
+
+    <!--&lt;!&ndash; 由于只有一个Bean名称，所以直接使用value属性进行配置，可以通过<list>子元素设定多个Bean名称&ndash;&gt;-->
+    <!--<bean class="org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator"-->
+          <!--p:beanNames="*er"-->
+          <!--p:interceptorNames="greetingAdvice"-->
+          <!--p:optimize="true"/>-->
+
+    <!-- 使用DefaultAdvisorAutoProxyCreator 自动扫描容器中的Advisor，并将Advisor自动织入
+    匹配的目标bean中，即为匹配的目标bean自动创建代理  重点 重点 重点 重点 重点 -->
+    <bean id="waiter" class="site.wzhe.aop.springAop.autoproxycreator.Waiter"/>
+    <bean id="seller" class="site.wzhe.aop.springAop.autoproxycreator.Seller"/>
+    <bean id="greetingAdvice" class="site.wzhe.aop.springAop.autoproxycreator.GreetingBeforeAdvice" />
+
+    <bean id="regexpAdvisor"
+          class="org.springframework.aop.support.RegexpMethodPointcutAdvisor"
+          p:patterns=".*greet.*"
+          p:advice-ref="greetingAdvice"/>
+    <!-- 重点 重点 重点 -->
+    <bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"/>
+</beans>

@@ -1,0 +1,55 @@
+<!DOCTYPE web-app PUBLIC
+ "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+ "http://java.sun.com/dtd/web-app_2_3.dtd" >
+
+<web-app>
+  <display-name>Archetype Created Web Application</display-name>
+  <servlet>
+    <servlet-name>Demo1</servlet-name>
+    <servlet-class>site.wzhe.servlet.ServletDemo1</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>Demo1</servlet-name>
+    <url-pattern>/servletDemo1</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>Demo2</servlet-name>
+    <servlet-class>site.wzhe.servlet.ServletDemo2</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>Demo2</servlet-name>
+    <url-pattern>/servletDemo2</url-pattern>
+  </servlet-mapping>
+  <filter>
+    <filter-name>Demo3</filter-name>
+    <filter-class>site.wzhe.servlet.FilterDemo1</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>Demo3</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+  <filter>
+    <filter-name>Demo4</filter-name>
+    <filter-class>site.wzhe.servlet.FilterDemo2</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>Demo4</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+  <filter>
+    <filter-name>countFilter</filter-name>
+    <filter-class>site.wzhe.servlet.CountFilter</filter-class>
+    <init-param>
+      <param-name>count</param-name>
+      <param-value>5000</param-value>
+    </init-param>
+  </filter>
+  <filter-mapping>
+     <filter-name>countFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+  <welcome-file-list>
+    <welcome-file>index.jsp</welcome-file>
+  </welcome-file-list>
+</web-app>

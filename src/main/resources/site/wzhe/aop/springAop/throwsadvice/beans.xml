@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+
+    <bean id="transactionManager" class="site.wzhe.aop.springAop.throwsadvice.TransactionManager"/> <!-- 增强bean对象 -->
+
+    <bean id="target" class="site.wzhe.aop.springAop.throwsadvice.ForumService"/> <!-- 目标对象-->
+    <!-- proxyInterfaces指定代理的接口 -->
+    <!-- interceptorNames指定使用的增强 -->
+    <!-- interceptorNames中再加上后置增强 -->
+    <bean id="forumService" class="org.springframework.aop.framework.ProxyFactoryBean"
+          p:interceptorNames="transactionManager"
+          p:target-ref="target"
+    />
+</beans>
