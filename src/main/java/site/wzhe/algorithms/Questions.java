@@ -7,7 +7,7 @@ import java.util.*;
  * @description: 所有题目
  * @date: 2019/2/27.
  */
-public class StringTypeQuestions {
+public class Questions {
 
 
     /**
@@ -483,7 +483,7 @@ public class StringTypeQuestions {
 
 
     /**
-     * 给定一个包含 n 个整数的数组 nums，判断 nums 中是否存在三个元素 a，b，c ，使得 a + b + c = 0 ？找出所有满足条件且不重复的三元组。
+     * 题目12 给定一个包含 n 个整数的数组 nums，判断 nums 中是否存在三个元素 a，b，c ，使得 a + b + c = 0 ？找出所有满足条件且不重复的三元组。
      *  注意：答案中不可以包含重复的三元组。
      *  e.g: 输入 :nums = [-1, 0, 1, 2, -1, -4]  输出: [[-1, 0, 1],[-1, -1, 2]]
      * @param nums
@@ -599,6 +599,136 @@ public class StringTypeQuestions {
         return null;
     }
 
+    // Definition for singly-linked list.
+    public static class ListNode {
+        int val;
+        ListNode next;
+
+        ListNode(int x) {
+            val = x;
+        }
+    }
+
+    /**
+     * 题目13：给出两个 非空 的链表用来表示两个非负的整数。其中，它们各自的位数是按照 逆序 的方式存储的，并且它们的每个节点只能存储 一位 数字。
+     * 如果，我们将这两个数相加起来，则会返回一个新的链表来表示它们的和。您可以假设除了数字 0 之外，这两个数都不会以 0 开头。
+     * e.g：
+     * 输入：(2 -> 4 -> 3) + (5 -> 6 -> 4)
+     * 输出：7 -> 0 -> 8
+     * 原因：342 + 465 = 807
+     *
+     * @param l1
+     * @param l2
+     * @return
+     */
+    private static ListNode solution15(ListNode l1, ListNode l2) {
+        if (l1 == null || l2 == null) {
+            return null;
+        }
+        ListNode result = null, preNode = null, temp = null;
+        int carryFlag = 0;
+        while (!(l1 == null && l2 == null)) {
+            int v1 = 0, v2 = 0;
+            if (l1 != null) {
+                v1 = l1.val;
+            }
+            if (l2 != null) {
+                v2 = l2.val;
+            }
+            if ((carryFlag != 0) || (l1 != null && l2 != null)) {
+                temp = new ListNode((v1 + v2 + carryFlag) % 10);
+                carryFlag = (v1 + v2 + carryFlag >= 10) ? 1 : 0;
+            } else {
+                if (l1 == null) {
+                    temp = l2;
+                }
+                if (l2 == null) {
+                    temp = l1;
+                }
+            }
+            if (preNode == null) {
+                preNode = temp;
+                result = preNode;
+            } else {
+                preNode.next = temp;
+                preNode = temp;
+            }
+            l1 = (l1 != null) ? l1.next : null;
+            l2 = (l2 != null) ? l2.next : null;
+        }
+        temp = (carryFlag != 0) ? new ListNode(carryFlag) : null;
+        if (temp != null) {
+            temp.next = null;
+            preNode.next = temp;
+        } else {
+            preNode.next = null;
+        }
+        return result;
+    }
+
+    /**
+     *  题目14：给定一个整数数组 nums 和一个目标值 target，请你在该数组中找出和为目标值的那两个整数，并返回他们的数组下标。
+     *  你可以假设每种输入只会对应一个答案。但是，你不能重复利用这个数组中同样的元素
+     *  注：此解决方法有问题，会申请大量内存，优化方向为动态hash表即官方解法。
+     *  e.g: 给定 nums = [2, 7, 11, 15], target = 9
+     *       因为 nums[0] + nums[1] = 2 + 7 = 9
+     *       所以返回 [0, 1]
+     * @param nums
+     * @param target
+     * @return
+     */
+    private static int[] solution016(int[] nums, int target) {
+        int length = nums.length;
+        if (length <= 0) {
+            throw new IllegalArgumentException();
+        }
+        // 先找到nums中最小值和最大值
+        int min = nums[0], max = nums[0];
+        for (int i = 0; i < length; i++) {
+            if (nums[i] > max) {
+                max = nums[i];
+            }
+            if (nums[i] < min) {
+                min = nums[i];
+            }
+        }
+        int offset = -min, tableSize = max - min + 1;
+        int[] map = new int[tableSize];
+        for (int i = 0; i < tableSize; i++) {
+            map[i] = -1;
+        }
+        for (int i = 0; i < length * 2; i++) {
+            if (i < length) {
+                // 在map中记录下nums的位置信息
+                map[nums[i] + offset] = i;
+            } else {
+                int index = target - nums[i - length] + offset;
+                if (0 <= index && index < tableSize && map[index] != -1 && map[index] != i - length) {
+                    return new int[]{i - length, map[index]};
+                }
+            }
+        }
+        throw new IllegalArgumentException();
+    }
+
+    /**
+     * 题目14 官方解答
+     * @param nums
+     * @param target
+     * @return
+     */
+    private static int[] solution17(int[] nums, int target) {
+        Map<Integer, Integer> map = new HashMap<Integer, Integer>();
+        for (int i = 0; i < nums.length; i++) {
+            int complement = target - nums[i];
+            if (map.containsKey(complement)) {
+                return new int[] { map.get(complement), i };
+            }
+            map.put(nums[i], i);
+        }
+        throw new IllegalArgumentException("No two sum solution");
+
+    }
 
     public static void main(String[] args) {
 
